@@ -78,7 +78,7 @@ func (c *HangingDropletsCleaner) Collect(ch chan<- prometheus.Metric) {
 
 func (c *HangingDropletsCleaner) shouldRemoveDroplet(droplet godo.Droplet, machines []Machine) bool {
 	for _, machine := range machines {
-		if droplet.Name == machine.Name && machine.DropletId != "" {
+		if droplet.Name == machine.Name && machine.DropletId != 0 {
 			return false
 		}
 	}

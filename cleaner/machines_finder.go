@@ -18,7 +18,7 @@ type MachinesFinder struct {
 
 type Machine struct {
 	Name      string
-	DropletId string
+	DropletId float64
 }
 
 func (m *MachinesFinder) ListMachines(runnerPrefixRegexp *regexp.Regexp) ([]Machine, error) {
@@ -35,8 +35,8 @@ func (m *MachinesFinder) ListMachines(runnerPrefixRegexp *regexp.Regexp) ([]Mach
 			continue
 		}
 
-		configFile := fmt.Sprintf("%s/config.json", name)
-		dropletId := ""
+		configFile := fmt.Sprintf("%s/%s/config.json", m.machinesDirectory, name)
+		dropletId := float64(0)
 
 		if _, err := os.Stat(configFile); os.IsNotExist(err) {
 			return nil, err
@@ -58,9 +58,9 @@ func (m *MachinesFinder) ListMachines(runnerPrefixRegexp *regexp.Regexp) ([]Mach
 
 			if driverConfig, ok := dockerMachineConfigParsed["Driver"].(map[string]interface{}); ok {
 
-				dropletIdString := driverConfig["DropletID"].(string)
+				dropletIdString := driverConfig["DropletID"].(float64)
 
-				if dropletIdString != "0" {
+				if dropletIdString != 0 {
 					dropletId = dropletIdString
 				}
 			}

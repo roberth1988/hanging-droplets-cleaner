@@ -131,7 +131,7 @@ func TestCleanerNoDroplets(t *testing.T) {
 		machines = []Machine{
 			{
 				Name:      "runner-abc123-test-1",
-				DropletId: "",
+				DropletId: 0,
 			},
 		}
 		return
@@ -171,7 +171,7 @@ func TestCleanerDropletsAndMachinesNotMatching(t *testing.T) {
 		machines = []Machine{
 			{
 				Name:      "runner-abc123-test-1",
-				DropletId: "0",
+				DropletId: 0,
 			},
 		}
 		return
@@ -214,7 +214,7 @@ func TestCleanerDropletsAndMachinesPartiallyMatching(t *testing.T) {
 		machines = []Machine{
 			{
 				Name:      "runner-abc123-test-1",
-				DropletId: "0",
+				DropletId: 0,
 			},
 		}
 		return
@@ -257,11 +257,11 @@ func TestCleanerDropletsAndMachinesMatching(t *testing.T) {
 		machines = []Machine{
 			{
 				Name:      "runner-abc123-test-1",
-				DropletId: "0",
+				DropletId: 0,
 			},
 			{
 				Name:      "runner-abc123-test-2",
-				DropletId: "0",
+				DropletId: 0,
 			},
 		}
 		return
