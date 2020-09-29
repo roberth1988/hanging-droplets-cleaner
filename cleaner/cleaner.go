@@ -122,7 +122,7 @@ func (c *HangingDropletsCleaner) cleanDockerMachineFolder(machineDirectory, drop
 
 	dockerMachinePath := fmt.Sprintf("%s/%s", machineDirectory, dropletName)
 
-	if _, err := os.Stat("/path/to/whatever"); !os.IsNotExist(err) {
+	if _, err := os.Stat(dockerMachinePath); !os.IsNotExist(err) {
 		logrus.Infof("Cleaning up the DockerMachine folder: %s\n", dockerMachinePath)
 		os.RemoveAll(dockerMachinePath)
 	}
