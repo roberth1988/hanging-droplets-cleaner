@@ -12,15 +12,19 @@ import (
 )
 
 var mainFlags = []cli.Flag{
-	cli.BoolFlag{
-		Name:   "debug",
-		EnvVar: "DEBUG",
-		Usage:  "Set debug log-level",
+	&cli.BoolFlag{
+		Name: "debug",
+		EnvVars: []string{
+			"DEBUG",
+		},
+		Usage: "Set debug log-level",
 	},
-	cli.BoolFlag{
-		Name:   "no-color",
-		EnvVar: "NO_COLOR",
-		Usage:  "Disable output coloring",
+	&cli.BoolFlag{
+		Name: "no-color",
+		EnvVars: []string{
+			"NO_COLOR",
+		},
+		Usage: "Disable output coloring",
 	},
 }
 
@@ -77,8 +81,8 @@ func main() {
 	cli.VersionPrinter = func(c *cli.Context) {
 		fmt.Println(version.AppVersion.Extended())
 	}
-	app.Authors = []cli.Author{
-		{
+	app.Authors = []*cli.Author{
+		&cli.Author{
 			Name:  "GitLab Inc.",
 			Email: "support@gitlab.com",
 		},
@@ -91,7 +95,7 @@ func main() {
 	setupLogging(app)
 	logStartup(app)
 
-	app.Commands = []cli.Command{
+	app.Commands = []*cli.Command{
 		commands.NewStartCommand(),
 		commands.NewOneShotCommand(),
 	}

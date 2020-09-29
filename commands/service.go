@@ -99,7 +99,7 @@ func (d *ServiceCommand) Execute(context *cli.Context) {
 	d.run()
 }
 
-func NewStartCommand() cli.Command {
+func NewStartCommand() *cli.Command {
 	provider := &CleanerProvider{}
 	cmd := &ServiceCommand{
 		provider: provider,
@@ -107,30 +107,30 @@ func NewStartCommand() cli.Command {
 
 	flags := []cli.Flag{
 		&cli.StringFlag{
-			Name:   "listen",
-			Usage:  "Debug server listen address",
+			Name:  "listen",
+			Usage: "Debug server listen address",
 			EnvVars: []string{
 				"LISTEN",
 			},
 		},
 		&cli.IntFlag{
-			Name:   "interval",
-			Usage:  "Number of seconds between cleanup attempts",
+			Name:  "interval",
+			Usage: "Number of seconds between cleanup attempts",
 			EnvVars: []string{
 				"INTERVAL",
 			},
-			Value:  DefaultInterval,
+			Value: DefaultInterval,
 		},
 	}
 	flags = append(flags, provider.Flags()...)
 
-	return cli.Command{
-		Name:   "service",
-		Usage:  "Start hanging droplets cleaner as a service mode",
+	return &cli.Command{
+		Name:  "service",
+		Usage: "Start hanging droplets cleaner as a service mode",
 		Action: func(c *cli.Context) error {
 			cmd.Execute(c)
 			return nil
 		},
-		Flags:  flags,
+		Flags: flags,
 	}
 }

@@ -40,14 +40,14 @@ func (fc *FakeDOClient) DeleteDroplet(droplet godo.Droplet) error {
 
 type FakeMachinesFinder struct {
 	t                   *testing.T
-	listMachinesAsserts func(*FakeMachinesFinder) ([]string, error)
+	listMachinesAsserts func(*FakeMachinesFinder) ([]Machine, error)
 }
 
-func (m *FakeMachinesFinder) ListMachines(runnerPrefixRegexp *regexp.Regexp) ([]string, error) {
+func (m *FakeMachinesFinder) ListMachines(runnerPrefixRegexp *regexp.Regexp) ([]Machine, error) {
 	if m.listMachinesAsserts != nil {
 		return m.listMachinesAsserts(m)
 	}
-	return []string{}, nil
+	return []Machine{}, nil
 }
 
 func getCleaner(t *testing.T) (cleaner *HangingDropletsCleaner, client *FakeDOClient, machinesFinder *FakeMachinesFinder) {
@@ -127,8 +127,13 @@ func TestCleanerNoDroplets(t *testing.T) {
 	cleaner, client, machinesFinder := getCleaner(t)
 	cleaner.EnableDelete()
 
-	machinesFinder.listMachinesAsserts = func(*FakeMachinesFinder) (machines []string, err error) {
-		machines = []string{"runner-abc123-test-1"}
+	machinesFinder.listMachinesAsserts = func(*FakeMachinesFinder) (machines []Machine, err error) {
+		machines = []Machine{
+			{
+				Name:      "runner-abc123-test-1",
+				DropletId: "",
+			},
+		}
 		return
 	}
 
@@ -162,8 +167,13 @@ func TestCleanerDropletsAndMachinesNotMatching(t *testing.T) {
 		return
 	}
 
-	machinesFinder.listMachinesAsserts = func(*FakeMachinesFinder) (machines []string, err error) {
-		machines = []string{"runner-abc123-test-1"}
+	machinesFinder.listMachinesAsserts = func(*FakeMachinesFinder) (machines []Machine, err error) {
+		machines = []Machine{
+			{
+				Name:      "runner-abc123-test-1",
+				DropletId: "0",
+			},
+		}
 		return
 	}
 
@@ -200,8 +210,13 @@ func TestCleanerDropletsAndMachinesPartiallyMatching(t *testing.T) {
 		return
 	}
 
-	machinesFinder.listMachinesAsserts = func(*FakeMachinesFinder) (machines []string, err error) {
-		machines = []string{"runner-abc123-test-1"}
+	machinesFinder.listMachinesAsserts = func(*FakeMachinesFinder) (machines []Machine, err error) {
+		machines = []Machine{
+			{
+				Name:      "runner-abc123-test-1",
+				DropletId: "0",
+			},
+		}
 		return
 	}
 
@@ -238,8 +253,17 @@ func TestCleanerDropletsAndMachinesMatching(t *testing.T) {
 		return
 	}
 
-	machinesFinder.listMachinesAsserts = func(*FakeMachinesFinder) (machines []string, err error) {
-		machines = []string{"runner-abc123-test-1", "runner-abc123-test-2"}
+	machinesFinder.listMachinesAsserts = func(*FakeMachinesFinder) (machines []Machine, err error) {
+		machines = []Machine{
+			{
+				Name:      "runner-abc123-test-1",
+				DropletId: "0",
+			},
+			{
+				Name:      "runner-abc123-test-2",
+				DropletId: "0",
+			},
+		}
 		return
 	}
 

@@ -45,7 +45,7 @@ func (o *OneShotCommand) Execute(context *cli.Context) {
 	}
 }
 
-func NewOneShotCommand() cli.Command {
+func NewOneShotCommand() *cli.Command {
 	provider := &CleanerProvider{}
 	cmd := &OneShotCommand{
 		provider: provider,
@@ -59,13 +59,13 @@ func NewOneShotCommand() cli.Command {
 	}
 	flags = append(flags, provider.Flags()...)
 
-	return cli.Command{
-		Name:   "one-shot",
-		Usage:  "Start hanging droplets cleaner in a one-shot mode",
+	return &cli.Command{
+		Name:  "one-shot",
+		Usage: "Start hanging droplets cleaner in a one-shot mode",
 		Action: func(c *cli.Context) error {
 			cmd.Execute(c)
 			return nil
 		},
-		Flags:  flags,
+		Flags: flags,
 	}
 }
