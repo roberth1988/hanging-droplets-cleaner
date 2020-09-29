@@ -2,6 +2,7 @@ package cleaner
 
 import (
 	"fmt"
+	"os"
 	"regexp"
 	"strings"
 	"time"
@@ -117,7 +118,17 @@ func (c *HangingDropletsCleaner) stopAndDeleteDroplet(droplet godo.Droplet) {
 	c.deleteDroplet(droplet)
 }
 
-func (c *HangingDropletsCleaner) findAndDeleteHangingDroplets(droplets []godo.Droplet, machines []Machine) int64 {
+func (c *HangingDropletsCleaner) cleanDockerMachineFolder(machineDirectory, dropletName string) {
+
+	dockerMachinePath := fmt.Sprintf("%s/%s", machineDirectory, dropletName)
+
+	if _, err := os.Stat("/path/to/whatever"); !os.IsNotExist(err) {
+		logrus.Infof("Cleaning up the DockerMachine folder: %s\n", dockerMachinePath)
+		os.RemoveAll(dockerMachinePath)
+	}
+}
+
+func (c *HangingDropletsCleaner) findAndDeleteHangingDroplets(droplets []godo.Droplet, machines []Machine, machineDirectory string) int64 {
 	removed := c.totalNumberOfRemovedDroplets
 	for _, droplet := range droplets {
 		if !c.shouldRemoveDroplet(droplet, machines) {
@@ -125,6 +136,7 @@ func (c *HangingDropletsCleaner) findAndDeleteHangingDroplets(droplets []godo.Dr
 		}
 
 		c.stopAndDeleteDroplet(droplet)
+		c.cleanDockerMachineFolder(machineDirectory, droplet.Name)
 	}
 
 	return c.totalNumberOfRemovedDroplets - removed
@@ -154,7 +166,7 @@ func (c *HangingDropletsCleaner) Clean() error {
 		return nil
 	}
 
-	count = c.findAndDeleteHangingDroplets(droplets, machines)
+	count = c.findAndDeleteHangingDroplets(droplets, machines, c.machinesFinder.GetMachinesDirectory())
 
 	return nil
 }

@@ -10,6 +10,7 @@ import (
 
 type MachinesFinderInterface interface {
 	ListMachines(*regexp.Regexp) ([]Machine, error)
+	GetMachinesDirectory() string
 }
 
 type MachinesFinder struct {
@@ -74,6 +75,10 @@ func (m *MachinesFinder) ListMachines(runnerPrefixRegexp *regexp.Regexp) ([]Mach
 	}
 
 	return machines, nil
+}
+
+func (m *MachinesFinder) GetMachinesDirectory() string {
+	return m.machinesDirectory
 }
 
 func NewMachinesFinder(machinesDirectory string) *MachinesFinder {

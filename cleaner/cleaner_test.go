@@ -50,6 +50,10 @@ func (m *FakeMachinesFinder) ListMachines(runnerPrefixRegexp *regexp.Regexp) ([]
 	return []Machine{}, nil
 }
 
+func (m *FakeMachinesFinder) GetMachinesDirectory() string {
+	return "/root/.docker/machine/machines"
+}
+
 func getCleaner(t *testing.T) (cleaner *HangingDropletsCleaner, client *FakeDOClient, machinesFinder *FakeMachinesFinder) {
 	client = &FakeDOClient{t: t}
 	machinesFinder = &FakeMachinesFinder{t: t}
