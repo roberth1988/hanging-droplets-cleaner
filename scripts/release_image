@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+IMAGE="$CI_REGISTRY_IMAGE"
+
+source ./scripts/docker_support
+
+login
+pull
+
+echo "Building image"
+docker build --cache-from ${IMAGE} -t ${IMAGE}:${VERSION} .
+docker tag ${IMAGE}:${VERSION} ${IMAGE}
+
+push
+logout

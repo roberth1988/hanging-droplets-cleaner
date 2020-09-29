@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+IMAGE="$CI_IMAGE"
+
+source ./scripts/docker_support
+
+login
+pull
+
+echo "Building image"
+docker build --cache-from ${IMAGE} -t ${IMAGE} -f Dockerfile.ci .
+
+push
+logout

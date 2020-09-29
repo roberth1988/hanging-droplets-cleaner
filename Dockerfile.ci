@@ -1,0 +1,10 @@
+FROM golang:1.8-alpine
+
+WORKDIR /tmp
+
+RUN apk add -U git make bash wget
+RUN wget -q https://get.docker.com/builds/Linux/x86_64/docker-17.05.0-ce.tgz -O /tmp/docker.tar.gz; \
+    tar -xzf /tmp/docker.tar.gz -C /tmp/; \
+    cp /tmp/docker/docker* /usr/bin; \
+    chmod +x /usr/bin/docker*; \
+    rm -rf /tmp/*
