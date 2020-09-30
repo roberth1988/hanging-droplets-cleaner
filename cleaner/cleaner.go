@@ -197,6 +197,7 @@ func (c *HangingDropletsCleaner) Clean() error {
 	count = c.findAndDeleteHangingDroplets(droplets, machines, c.machinesFinder.GetMachinesDirectory())
 
 	logrus.Infoln("Cleaning up Zombie folders")
+	c.findAndDeleteZombieFolders(droplets, machines, c.machinesFinder.GetMachinesDirectory())
 
 	return nil
 }
