@@ -146,6 +146,30 @@ func (c *HangingDropletsCleaner) findAndDeleteHangingDroplets(droplets []godo.Dr
 	return c.totalNumberOfRemovedDroplets - removed
 }
 
+func (c *HangingDropletsCleaner) findAndDeleteZombieFolders(droplets []godo.Droplet, machines []Machine, machineDirectory string) {
+
+	var machineNames []string
+	for _, machine := range machines {
+		machineNames = append(machineNames, machine.Name)
+	}
+
+	for _, droplet := range droplets {
+
+		if !c.stringInSlice(droplet.Name, machineNames) {
+			c.cleanDockerMachineFolder(machineDirectory, droplet.Name)
+		}
+	}
+}
+
+func (c *HangingDropletsCleaner) stringInSlice(a string, list []string) bool {
+	for _, b := range list {
+		if b == a {
+			return true
+		}
+	}
+	return false
+}
+
 func (c *HangingDropletsCleaner) Clean() error {
 	var count int64
 
@@ -171,6 +195,8 @@ func (c *HangingDropletsCleaner) Clean() error {
 	}
 
 	count = c.findAndDeleteHangingDroplets(droplets, machines, c.machinesFinder.GetMachinesDirectory())
+
+	logrus.Infoln("Cleaning up Zombie folders")
 
 	return nil
 }
